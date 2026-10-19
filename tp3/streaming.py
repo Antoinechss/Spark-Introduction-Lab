@@ -35,7 +35,8 @@ sales = (lines
         col("c")[4].cast("double").alias("prix_unitaire"),
         col("c")[5].alias("region"),
     )
-    .withColumn("ca", col("quantite") * col("prix_unitaire")))
+    .withColumn("ca", col("quantite") * col("prix_unitaire"))
+    .filter(col("region") == "Nord"))
 
 # ---------- 4. Agrégation par fenêtre de 10 secondes ----------
 result = (sales
@@ -50,7 +51,7 @@ result = (sales
 
 # ---------- 5. Affichage console ----------
 query = (result.writeStream
-         .outputMode("update")          # ← à faire varier dans le TP
+         .outputMode("complete")          # ← à faire varier dans le TP
          .format("console")
          .option("truncate", False)
          .start())
